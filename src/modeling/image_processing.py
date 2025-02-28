@@ -1,6 +1,4 @@
-import typing
 from PIL import Image
-import numpy as np
 import torch
 from torchvision import transforms
 
@@ -37,21 +35,18 @@ class ImageProcessor:
             transform_list.append(transforms.RandomVerticalFlip(p=0.50))
         return transforms.Compose(transform_list)
 
-    def preprocess_for_model(self, img: typing.Union[np.ndarray, Image]) -> torch.Tensor:
+    def preprocess_for_model(self, img: Image) -> torch.Tensor:
         """
         Preprocess the image for model. Use this function
         as single source so ensure same processing is done for
         training and inference.
 
         Args:
-            img: The image to preprocess. Accept numpy array or PIL Image, but
-                 PIL Image is needed by torch.
+            img: The image to preprocess. PIL Image is needed by torch.
 
         Returns:
             The tensor for model input.
         """
-        if isinstance(img, np.ndarray):
-            img = Image.fromarray(img)
         assert img.mode == 'RGB' and img.size == (580, 680)
         return self.img_transforms(img)
 

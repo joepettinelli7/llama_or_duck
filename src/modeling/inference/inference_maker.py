@@ -1,5 +1,5 @@
 import torch
-import numpy as np
+from PIL import Image
 
 from modeling.model.mobilenet_v2 import create_model
 from modeling.image_processing import ImageProcessor
@@ -13,7 +13,7 @@ class InferenceMaker:
         self.model.eval()
         self.img_processor = ImageProcessor(for_training=False)
 
-    def infer(self, image: np.ndarray) -> bool:
+    def infer(self, image: Image) -> bool:
         """
         Make inference on image using model.
 

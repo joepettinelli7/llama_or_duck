@@ -1,4 +1,5 @@
 import torch
+from PIL import Image
 
 from hardware.motor import MotorController
 from hardware.camera import CameraController
@@ -15,8 +16,8 @@ def play_game() -> None:
     inference_maker = InferenceMaker(device)
     try:
         while True:
-            img = camera.take_image()
-            is_llama = inference_maker.infer(img)
+            img: Image = camera.take_image()
+            is_llama: bool = inference_maker.infer(img)
             if is_llama:
                 motor.press_llama()
             else:
