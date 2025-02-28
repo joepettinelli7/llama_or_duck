@@ -1,5 +1,5 @@
-import numpy as np
 import time
+from PIL import Image
 from picamera2 import Picamera2, Preview
 
 
@@ -14,15 +14,15 @@ class CameraController:
         print("\nSuccessfully initialized camera")
         time.sleep(1)
 
-    def take_image(self) -> np.ndarray:
+    def take_image(self) -> Image:
         """
         Take a single image with camera.
 
         Returns:
-            A 3D array.
+            A PIL Image that is RGB 8-bit.
         """
-        img_array = self.camera.capture_array()
-        return img_array
+        pil_image = self.camera.capture_image()
+        return pil_image
 
     def stop_camera(self) -> None:
         """
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     controller = CameraController()
     start_time = time.time()
     for _ in range(10):
-        img_arr = controller.take_image()
+        _ = controller.take_image()
     end_time = time.time()
     print(f"{10 / (end_time - start_time)} images/second")
     controller.stop_camera()
