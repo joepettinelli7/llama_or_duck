@@ -3,6 +3,8 @@ import math
 import sys
 import time
 import torch
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 from src.modeling.training import utils
 from src.modeling.training.config import EARLY_STOP_PATIENCE
@@ -84,9 +86,9 @@ def train_one_epoch(model: CustomMobileNetV2,
             logger.info("Loss is {}, stopping training".format(loss_value))
             logger.info(loss_value)
             sys.exit(1)
-        optimizer.zero_grad()
-        loss_tensor.backward()
-        optimizer.step()
+        optimizer.zero_grad()  # flush gradients memory
+        loss_tensor.backward()  # compute gradients
+        optimizer.step()  # adjust parameters
         if lr_scheduler is not None:
             lr_scheduler.step()
         metric_logger.update(loss=loss_value)
@@ -119,6 +121,7 @@ def train_model(dataloaders: [str, torch.utils.data.DataLoader],  # ignore
     """
     since = time.time()
     early_stopping = EarlyStopping(patience=EARLY_STOP_PATIENCE, delta=0.0)
+    epoch_loss_values: list[float] = []
     for epoch in range(num_epochs):
         # Train for one epoch
         print(f'{epoch + 1} / {num_epochs}')
@@ -132,19 +135,28 @@ def train_model(dataloaders: [str, torch.utils.data.DataLoader],  # ignore
         # Update the learning rate
         lr_scheduler.step()
         # Evaluate model
-        val_loss: float = evaluate(model,
-                                   loss_func,
-                                   dataloaders["val"],
-                                   device,
-                                   epoch + 1,
-                                   logger=logger)
+        validation_loss: float = evaluate(model,
+                                          loss_func,
+                                          dataloaders["val"],
+                                          device,
+                                          epoch + 1,
+                                          logger=logger)
+        epoch_loss_values.append(validation_loss)
         # Potentially stop training if val loss increased
-        should_stop = early_stopping(val_loss)
+        should_stop = early_stopping(validation_loss)
         if should_stop:
             print("Early stopping triggered!")
-            return model
+            break
     time_elapsed = time.time() - since
     logging.info("Training complete in {:.0f}m {:.0f}s".format(time_elapsed // 60, time_elapsed % 60))
+    # Plot loss values
+    plt.plot(list(range(0, len(epoch_loss_values))), epoch_loss_values)
+    plt.title("BCE Loss Trend Over Increasing Epochs")
+    plt.xlabel("Epoch")
+    plt.ylabel("BCE Loss")
+    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+    plt.savefig('loss_plot.png')
+    plt.clf()
     return model
 
 
