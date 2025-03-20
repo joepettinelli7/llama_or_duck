@@ -3,7 +3,7 @@ TRAIN_DIR: str = "/Volumes/NO_NAME/model_input_dir"
 # Number of training epochs
 DEFAULT_EPOCHS: int = 20
 # Number of images per training batch
-DEFAULT_BATCH_SIZE: int = 6
+DEFAULT_BATCH_SIZE: int = 16
 # Starting learning rate
 DEFAULT_LEARNING_RATE: float = 0.001
 # Penalty term applied to loss function to prevent overfitting
