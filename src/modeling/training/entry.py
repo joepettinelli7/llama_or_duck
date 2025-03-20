@@ -88,7 +88,7 @@ def run_with_args(args) -> None:
     optimizer = torch.optim.Adam(params, lr=args.learning_rate, weight_decay=args.weight_decay)
     # Learning rate scheduler which decreases the learning rate by 10x every 3 epochs
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.step_size, gamma=args.gamma)
-    # Binary cross entropy combined with sigmoid activation
+    # Binary cross entropy combined with sigmoid activation. Pass raw logits.
     loss_func = torch.nn.BCEWithLogitsLoss()
     print('Start training')
     trained_model: CustomMobileNetV2 = train_model(
