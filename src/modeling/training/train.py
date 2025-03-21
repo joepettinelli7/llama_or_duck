@@ -142,7 +142,7 @@ def train_model(dataloaders: [str, torch.utils.data.DataLoader],  # ignore
                                           epoch + 1,
                                           logger=logger)
         epoch_loss_values.append(validation_loss)
-        # Potentially stop training if val loss increased
+        # Potentially stop training if validation loss increased
         should_stop = early_stopping(validation_loss)
         if should_stop:
             print("Early stopping triggered!")

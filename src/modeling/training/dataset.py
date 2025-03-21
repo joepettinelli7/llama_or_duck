@@ -148,11 +148,13 @@ def prepare_dataloader(train_dir: str, batch_size: int) -> Tuple[Dict[str, torch
             batch_size=batch_size,
             shuffle=True,
             num_workers=0,
+            drop_last=True
         ),
         "val": torch.utils.data.DataLoader(
             val_dataset,
             batch_size=batch_size,
             num_workers=0,
+            drop_last=True
         ),
     }
     dataset_sizes = {"train": len(dataset) -
