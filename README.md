@@ -1,7 +1,7 @@
 # llama_or_duck
 
 ## What does this project do?
-This project is used to train a MobileNet V2 model (https://pytorch.org/hub/pytorch_vision_mobilenet_v2/) that is used within a robot to play the iOS app Llama or Duck (https://apps.apple.com/us/app/llama-or-duck/id595311729).
+This project uses transfer learning with the MobileNet V2 architecture (https://pytorch.org/hub/pytorch_vision_mobilenet_v2/) to train an image classification model that is used within a robot to play the iOS app Llama or Duck (https://apps.apple.com/us/app/llama-or-duck/id595311729).
 
 https://github.com/user-attachments/assets/9f3e6fb7-fab3-4f9f-ab0b-08206348bf32
 
