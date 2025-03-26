@@ -43,3 +43,7 @@ To train:
 To play game:
 1. Change to src directory.
 2. Run main.py file.
+
+## Training
+![loss_plot](https://github.com/user-attachments/assets/162cb8f1-9c3b-4b4e-a497-4ea0fd9188d2)
+
