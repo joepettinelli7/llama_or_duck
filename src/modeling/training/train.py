@@ -78,17 +78,17 @@ def train_one_epoch(model: CustomMobileNetV2,
         warmup_iters = min(1000, len(data_loader) - 1)
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
     for images_batch, targets_batch in metric_logger.log_every(data_loader, header, logger):
-        images_batch.to(device)
-        model_output = model(images_batch)
-        loss_tensor = loss_func(model_output.squeeze(), targets_batch.float())
+        optimizer.zero_grad()  # flush gradients memory
+        images_batch.to(device), targets_batch.to(device)
+        model_output = model(images_batch)  # forward
+        loss_tensor = loss_func(model_output.squeeze(), targets_batch)  # compute BCE loss
         loss_value: float = loss_tensor.item()
         if not math.isfinite(loss_value):
             logger.info("Loss is {}, stopping training".format(loss_value))
             logger.info(loss_value)
             sys.exit(1)
-        optimizer.zero_grad()  # flush gradients memory
-        loss_tensor.backward()  # compute gradients
-        optimizer.step()  # adjust parameters
+        loss_tensor.backward()  # compute gradients in backpropagation
+        optimizer.step()  # update weights
         if lr_scheduler is not None:
             lr_scheduler.step()
         metric_logger.update(loss=loss_value)
